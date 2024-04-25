@@ -1,10 +1,40 @@
 pipeline {
-    agent any
-
+    agent any   
+    environment {
+        AWS_ACCESS=credentials('aws-credentials')  
+        AWS_REGION = 'us-east-1'
+    }
     stages {
-        stage('Echo Stage') {
+        stage('Create Infrastructure') {
             steps {
-                echo 'YUSUF ABI IS THE GOAT'
+                dir('terraform-docs') { 
+                    script {
+                        sh(script: 'terraform init', returnStdout: true)
+                        sh(script: 'terraform plan', returnStdout: true)
+                        sh(script: 'terraform apply -auto-approve', returnStdout: true)
+                    }
+                }
+            }
+        }
+        stage('Build Images') {
+            steps {
+                script {
+                    sh 'echo "Images Build"'
+                }
+            }
+        }
+        stage('Push Images to ECR') {
+            steps {
+                script {
+                    sh 'echo "Images Pushed"'
+                }
+            }
+        }
+        stage('Wait') {
+            steps {
+                script {
+                    sh 'echo "Wait is done."'
+                }
             }
         }
     }
