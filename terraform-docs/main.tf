@@ -14,7 +14,7 @@ locals {
   instance-type = "t3a.medium"
   key-name = "Martin-Greystone"
   secgr-dynamic-ports = [22,5000,3000,5432]
-  user = "insbekir"
+  user = "jenkins-projjj"
   ami = "ami-0230bd60aa48260c6"
 }
 
