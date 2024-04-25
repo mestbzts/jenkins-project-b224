@@ -11,5 +11,5 @@ provider "aws" {
   region = "us-east-1"
 }
 resource "aws_s3_bucket" "s3-deneme" {
-  bucket = "Goat-yusuf-abi-bjk-1903-ziya"
+  bucket = "jenkins-proj-trial-v1"
 }
