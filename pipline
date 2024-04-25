@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Create Infrastructure') {
             steps {
-                dir('terraform-docs') { 
+                dir('terraform-docs/infra') { 
                     script {
                         sh(script: 'terraform init', returnStdout: true)
                         sh(script: 'terraform plan', returnStdout: true)
@@ -15,6 +15,18 @@ pipeline {
                     }
                 }
             }
+        }
+        stage('Create ECR') {
+            steps {
+                dir('terraform-docs/ecr') {
+                    script {
+                        sh(script: 'terraform init', returnStdout: true)
+                        sh(script: 'terraform plan', returnStdout: true)
+                        sh(script: 'terraform apply -auto-approve', returnStdout: true)
+                        sh 'echo "ECR Created"'
+                    }
+                }    
+            }  
         }
         stage('Build Images') {
             steps {
