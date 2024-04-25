@@ -1,4 +1,4 @@
-resource "aws_ecr_repository" "my_ecr_repo" {
+resource "aws_ecr_repository" "nodejs" {
   name                 = "jenkins-ecr-nodejs"  
   image_tag_mutability = "MUTABLE"
 
@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "my_ecr_repo" {
   }
 }
 
-resource "aws_ecr_repository" "my_ecr_repo" {
+resource "aws_ecr_repository" "react" {
   name                 = "jenkins-ecr-react"  
   image_tag_mutability = "MUTABLE"
 
@@ -24,7 +24,7 @@ resource "aws_ecr_repository" "my_ecr_repo" {
   }
 }
 
-resource "aws_ecr_repository" "my_ecr_repo" {
+resource "aws_ecr_repository" "postgresgl" {
   name                 = "jenkins-ecr-postgresql"  
   image_tag_mutability = "MUTABLE"
 
