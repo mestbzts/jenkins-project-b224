@@ -19,7 +19,7 @@ locals {
 }
 
 resource "aws_security_group" "allow_ssh" {
-  name        = "${local.user}-docker-instance-sg"
+  name        = "${local.user}-sg"
   description = "Allow SSH inbound traffic"
 
   dynamic "ingress" {
