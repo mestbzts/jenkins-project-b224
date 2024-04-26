@@ -3,6 +3,10 @@ pipeline {
     environment {
         AWS_ACCESS=credentials('aws-credentials')  
         AWS_REGION = 'us-east-1'
+        REPOSITORY_Nodejs = 'nodejs'
+        REPOSITORY_React = 'react'
+        REPOSITORY_Postgresql = 'postgresql'
+        
     }
     stages {
         stage('Create Infrastructure') {
@@ -18,12 +22,35 @@ pipeline {
         }
         stage('Create ECR') {
             steps {
-                dir('terraform-docs/ecr') {
                     script {
-                        sh(script: 'terraform init', returnStdout: true)
-                        sh(script: 'terraform plan', returnStdout: true)
-                        sh(script: 'terraform apply -auto-approve', returnStdout: true)
-                        sh 'echo "ECR Created"'
+                        def repoExists-nodejs = sh (
+                            script: "aws ecr describe-repositories --repository-names ${REPOSITORY_Nodejs}",
+                            returnStatus: true
+                        )
+                        // Create the repository if it does not exist
+                        if (repoExists-nodejs != 0) {
+                            sh "aws ecr create-repository --repository-name ${REPOSITORY_Nodejs}"
+                        }
+                    }
+                    script {
+                        def repoExists-react = sh (
+                            script: "aws ecr describe-repositories --repository-names ${REPOSITORY_React}",
+                            returnStatus: true
+                        )
+                        // Create the repository if it does not exist
+                        if (repoExists-react != 0) {
+                            sh "aws ecr create-repository --repository-name ${REPOSITORY_React}"
+                        }
+                    }
+                    script {
+                        def repoExists-postgresql = sh (
+                            script: "aws ecr describe-repositories --repository-names ${REPOSITORY_Postgresql}",
+                            returnStatus: true
+                        )
+                        // Create the repository if it does not exist
+                        if (repoExists-postgresql != 0) {
+                            sh "aws ecr create-repository --repository-name ${REPOSITORY_Postgresql}"
+                        }
                     }
                 }    
             }  
