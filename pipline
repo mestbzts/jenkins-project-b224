@@ -7,7 +7,7 @@ pipeline {
         REPOSITORY_Nodejs = 'nodejs'
         REPOSITORY_React = 'react'
         REPOSITORY_Postgresql = 'postgresql'
-        INSTANCE_ID = 'jenkins-project-Docker-instance'
+        INSTANCE_NAME = 'jenkins-project-Docker-instance'
         
     }
     stages {
@@ -105,7 +105,7 @@ pipeline {
                     while (!instanceActive) {
                         // Command to check the EC2 instance status
                         def status = sh (
-                            script: "aws ec2 describe-instance-status --instance-id ${INSTANCE_ID} --query 'InstanceStatuses[*].InstanceState.Name' --output text --region ${AWS_REGION}",
+                            script: "aws ec2 describe-instance-status --instance-id ${INSTANCE_NAME} --query 'InstanceStatuses[*].InstanceState.Name' --output text --region ${AWS_REGION}",
                             returnStdout: true
                         ).trim()
                         
