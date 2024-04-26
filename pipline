@@ -13,19 +13,15 @@ pipeline {
     stages {
         stage('Create Infrastructure') {
             steps {
+                script {
+                   sh ('aws ec2 create-key-pair --key-name Martin --query "KeyMaterial" --output text > Martin.pem')
+                }
                 dir('terraform-docs/infra') { 
                     script {
                         sh(script: 'terraform init', returnStdout: true)
                         sh(script: 'terraform plan', returnStdout: true)
                         sh(script: 'terraform apply -auto-approve', returnStdout: true)
                     }
-                }
-            }
-        }
-        stage('Generate SSH Key') {
-            steps {
-                script {
-                   sh ('aws ec2 create-key-pair --key-name Martin --query "KeyMaterial" --output text > Martin.pem')
                 }
             }
         }
