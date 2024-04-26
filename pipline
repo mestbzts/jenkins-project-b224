@@ -3,6 +3,7 @@ pipeline {
     environment {
         AWS_ACCESS=credentials('aws-credentials')  
         AWS_REGION = 'us-east-1'
+        AWS_ACCOUNT_ID = '919329453049'
         REPOSITORY_Nodejs = 'nodejs'
         REPOSITORY_React = 'react'
         REPOSITORY_Postgresql = 'postgresql'
@@ -64,10 +65,18 @@ pipeline {
         stage('Push Images to ECR') {
             steps {
                 script {
-                    sh 'echo "Images Pushed"'
+                        // Login to AWS ECR
+                        sh("aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com")
+                        // Tag and push React Image
+                        tagAndPushImage("96cbcd39e189", "${REPOSITORY_React}")
+                        // Tag and push PostgreSQL Image
+                        tagAndPushImage("a35bd54092dd", "${REPOSITORY_Postgresql}")
+                        // Tag and push Node.js Image
+                        tagAndPushImage("3275239a3357", "${REPOSITORY_Nodejs}")
                 }
             }
         }
+        
         stage('Wait') {
             steps {
                 script {
@@ -75,6 +84,5 @@ pipeline {
                 }
             }
         }
-    }
-
+    }    
 }
