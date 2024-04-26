@@ -125,7 +125,7 @@ pipeline {
         stage('destroy') {
             steps {
                 script {
-                    sh 'echo "Destroyed."'
+                    sh 'echo "Destroye is done."'
                 }
             }
         }
