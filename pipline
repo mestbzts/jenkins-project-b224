@@ -23,32 +23,32 @@ pipeline {
         stage('Create ECR') {
             steps {
                     script {
-                        def repoExists-nodejs = sh (
+                        def repoExistsnodejs = sh (
                             script: "aws ecr describe-repositories --repository-names ${REPOSITORY_Nodejs}",
                             returnStatus: true
                         )
                         // Create the repository if it does not exist
-                        if (repoExists-nodejs != 0) {
+                        if (repoExistsnodejs != 0) {
                             sh "aws ecr create-repository --repository-name ${REPOSITORY_Nodejs}"
                         }
                     }
                     script {
-                        def repoExists-react = sh (
+                        def repoExistsreact = sh (
                             script: "aws ecr describe-repositories --repository-names ${REPOSITORY_React}",
                             returnStatus: true
                         )
                         // Create the repository if it does not exist
-                        if (repoExists-react != 0) {
+                        if (repoExistsreact != 0) {
                             sh "aws ecr create-repository --repository-name ${REPOSITORY_React}"
                         }
                     }
                     script {
-                        def repoExists-postgresql = sh (
+                        def repoExistspostgresql = sh (
                             script: "aws ecr describe-repositories --repository-names ${REPOSITORY_Postgresql}",
                             returnStatus: true
                         )
                         // Create the repository if it does not exist
-                        if (repoExists-postgresql != 0) {
+                        if (repoExistspostgresql != 0) {
                             sh "aws ecr create-repository --repository-name ${REPOSITORY_Postgresql}"
                         }
                     }
