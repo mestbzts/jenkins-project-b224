@@ -57,8 +57,20 @@ pipeline {
             }  
         stage('Build Images') {
             steps {
-                script {
-                    sh 'echo "Images Build"'
+                dir('nodejs') { 
+                    script {
+                        sh(script: 'docker build -t nodejs:v1 .', returnStdout: true)
+                    }
+                }
+                dir('react') { 
+                    script {
+                        sh(script: 'docker build -t react:v1 .', returnStdout: true)
+                    }
+                }
+                dir('postgresql') { 
+                    script {
+                        sh(script: 'docker build -t postgresql:v1 .', returnStdout: true)
+                    }
                 }
             }
         }
@@ -66,13 +78,15 @@ pipeline {
             steps {
                 script {
                         // Login to AWS ECR
-                        sh("aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com")
-                        // Tag and push React Image
-                        tagAndPushImage("96cbcd39e189", "${REPOSITORY_React}")
-                        // Tag and push PostgreSQL Image
-                        tagAndPushImage("a35bd54092dd", "${REPOSITORY_Postgresql}")
-                        // Tag and push Node.js Image
-                        tagAndPushImage("3275239a3357", "${REPOSITORY_Nodejs}")
+                        sh('aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com')
+                        // docker tag 
+                        sh('docker tag nodejs:v1 919329453049.dkr.ecr.us-east-1.amazonaws.com/nodejs:v1')
+                        sh('docker tag postgresql:v1 919329453049.dkr.ecr.us-east-1.amazonaws.com/postgresql:v1')
+                        sh('docker tag react:v1 919329453049.dkr.ecr.us-east-1.amazonaws.com/react:v1')
+                        // docker push to ecr
+                        sh('docker push 919329453049.dkr.ecr.us-east-1.amazonaws.com/nodejs:v1')
+                        sh('docker push 919329453049.dkr.ecr.us-east-1.amazonaws.com/postgresql:v1')    
+                        sh('docker push 919329453049.dkr.ecr.us-east-1.amazonaws.com/react:v1')                    
                 }
             }
         }
