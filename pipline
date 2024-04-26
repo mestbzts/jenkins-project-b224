@@ -7,6 +7,7 @@ pipeline {
         REPOSITORY_Nodejs = 'nodejs'
         REPOSITORY_React = 'react'
         REPOSITORY_Postgresql = 'postgresql'
+        INSTANCE_ID = 'jenkins-project-Docker-instance'
         
     }
     stages {
@@ -18,6 +19,13 @@ pipeline {
                         sh(script: 'terraform plan', returnStdout: true)
                         sh(script: 'terraform apply -auto-approve', returnStdout: true)
                     }
+                }
+            }
+        }
+        stage('Generate SSH Key') {
+            steps {
+                script {
+                   sh ('aws ec2 create-key-pair --key-name Martin --query "KeyMaterial" --output text > Martin.pem')
                 }
             }
         }
@@ -91,7 +99,32 @@ pipeline {
             }
         }
         
-        stage('Wait') {
+                script {
+                    // Initial delay to avoid premature checking
+                    sleep(time: 30, unit: 'SECONDS')
+                    
+                    // Loop to check instance status
+                    def instanceActive = false
+                    while (!instanceActive) {
+                        // Command to check the EC2 instance status
+                        def status = sh (
+                            script: "aws ec2 describe-instance-status --instance-id ${INSTANCE_ID} --query 'InstanceStatuses[*].InstanceState.Name' --output text --region ${AWS_REGION}",
+                            returnStdout: true
+                        ).trim()
+                        
+                        // Print current status
+                        echo "Current status of instance ${INSTANCE_ID}: ${status}"
+                        
+                        if (status == 'running') {
+                            instanceActive = true
+                            echo "Instance is active."
+                        } else {
+                            echo "Instance not active yet, rechecking in 30 seconds..."
+                            sleep(time: 30, unit: 'SECONDS')
+                        }
+                    }
+                }
+        stage('destroy') {
             steps {
                 script {
                     sh 'echo "Wait is done."'
