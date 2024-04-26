@@ -115,7 +115,7 @@ pipeline {
                             instanceActive = true
                             echo "Instance is active."
                         } else {
-                            echo "Instance not active yet, rechecking in 30 seconds..."
+                            echo "Instance not active yet, rechecking in 30 seconds.."
                             // sleep(time: 30, unit: 'SECONDS')
                         }
                     }
