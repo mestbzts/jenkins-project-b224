@@ -98,7 +98,7 @@ pipeline {
             steps {
                 script {
                     // Initial delay to avoid premature checking
-                    sleep(time: 31, unit: 'SECONDS')
+                    sleep(time: 30, unit: 'SECONDS')
                     
                     // Loop to check instance status
                     def instanceActive = false
@@ -117,7 +117,7 @@ pipeline {
                             echo "Instance is active."
                         } else {
                             echo "Instance not active yet, rechecking in 30 seconds..."
-                            sleep(time: 31, unit: 'SECONDS')
+                            sleep(time: 30, unit: 'SECONDS')
                         }
                     }
                 }
