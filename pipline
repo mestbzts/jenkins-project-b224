@@ -104,7 +104,7 @@ pipeline {
                     def instanceActive = false
                     while (!instanceActive) {
                         // Command to check the EC2 instance status
-                        def status = sh ('aws ec2 describe-instances --filters "Name=tag:Name,Values=jenkins-project-Docker-instance" --query "Reservations[*].Instances[*].InstanceId" --output text',
+                        def status = sh ('aws ec2 describe-instances --filters Name=tag:Name,Values=jenkins-project-Docker-instance --query "Reservations[*].Instances[*].InstanceId" --output text',
                             returnStdout: true
                             ).trim()
                         
