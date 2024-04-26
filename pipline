@@ -105,8 +105,8 @@ pipeline {
                     while (!instanceActive) {
                         // Command to check the EC2 instance status
                         def status = sh ('aws ec2 describe-instances --filters "Name=tag:Name,Values=${INSTANCE_NAME}" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].{Instance:InstanceId,State:State.Name}" --output text',
-                            returnStdout: true
-                            ).trim()
+                    returnStdout: true
+                ).trim()
                         
                         // Print current status
                         echo "Current status of instance ${INSTANCE_NAME}: ${status}"
